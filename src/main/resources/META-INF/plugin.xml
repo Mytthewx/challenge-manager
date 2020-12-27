@@ -1,0 +1,22 @@
+<idea-plugin>
+    <id>eu.mytthew.ChallengeManager</id>
+    <name>ChallangeManager</name>
+    <vendor email="some@yourcompany.com" url="http://www.jetbrains.com">Challenge Manager</vendor>
+
+    <description>At least some characters because it required.</description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+
+    <application-components>
+        <component>
+            <implementation-class>eu.mytthew.Plugin
+            </implementation-class>
+        </component>
+    </application-components>
+
+    <actions>
+    </actions>
+</idea-plugin>

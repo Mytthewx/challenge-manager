@@ -1,47 +1,42 @@
 plugins {
-    id 'java'
-    id 'application'
-    id 'org.jetbrains.intellij' version '0.6.5'
+	id 'java'
+	id 'application'
+	id "org.jetbrains.intellij" version "0.6.5"
 }
 
+mainClassName = "eu.mytthew.Plugin"
 group 'eu.mytthew'
 version '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    compile 'com.google.api-client:google-api-client:1.23.0'
-    compile 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
-    compile 'com.google.apis:google-api-services-calendar:v3-rev305-1.23.0'
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+	compile 'com.google.api-client:google-api-client:1.30.10'
+	compile 'com.google.oauth-client:google-oauth-client-jetty:1.31.4'
+	compile 'com.google.apis:google-api-services-calendar:v3-rev411-1.25.0'
 }
 
-// See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2020.3'
+	version '2020.3'
 }
+
 patchPluginXml {
-    changeNotes """
+	changeNotes """
       Add change notes here.<br>
       <em>most HTML tags may be used</em>"""
 }
+
 test {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
 
-mainClassName = "eu.mytthew.Plugin"
-
-jar {
-    manifest {
-        attributes(
-                'Main-Class': 'eu.mytthew.Plugin'
-        )
-    }
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
+task fatJar(type: Jar) {
+	manifest {
+		attributes 'Main-Class': 'eu.mytthew.Plugin'
+	}
+	baseName = project.name + '-all'
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	with jar
 }

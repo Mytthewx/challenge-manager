@@ -56,20 +56,20 @@ public class EventManager {
 				.setApplicationName(APPLICATION_NAME)
 				.build();
 	}
-	
 
-	public void addEvent() throws IOException, GeneralSecurityException {
+	public Event addEvent(int description) throws IOException, GeneralSecurityException {
 		Event event = new Event()
 				.setSummary("100 days of coding challenge")
-				.setColorId("4")
-				.setDescription("testing description");
+				.setColorId("3")
+				.setDescription(description + "/100");
 		DateTime today = new DateTime(String.valueOf(LocalDate.now()));
 		EventDateTime eventDateTime = new EventDateTime()
 				.setDate(today);
 		event.setStart(eventDateTime);
 		event.setEnd(eventDateTime);
-		String calendarId = "primary";
+		String calendarId = "3celm3jfnf8v441ar1uutr37g0@group.calendar.google.com";
 		service.events().insert(calendarId, event).execute();
 		System.out.println("Event created!");
+		return event;
 	}
 }

@@ -24,12 +24,18 @@ public class Plugin {
 						.stream()
 						.filter(event -> event.getStart().getDate().toString().equals(yesterdayDate.toString()))
 						.findFirst();
-				if (yesterdayEvent.isPresent()) {
-					String description = yesterdayEvent.get().getDescription();
-					int descriptionNumber = Integer.parseInt(description.split("/")[0]);
-					eventManager.addEvent(descriptionNumber + 1);
-				} else {
-					eventManager.addEvent(1);
+				Optional<Event> todayEvent = eventList
+						.stream()
+						.filter(event -> event.getStart().getDate().toString().equals(LocalDate.now().toString()))
+						.findFirst();
+				if (todayEvent.isEmpty()) {
+					if (yesterdayEvent.isPresent()) {
+						String description = yesterdayEvent.get().getDescription();
+						int descriptionNumber = Integer.parseInt(description.split("/")[0]);
+						eventManager.addEvent(descriptionNumber + 1);
+					} else {
+						eventManager.addEvent(1);
+					}
 				}
 			} catch (IOException | GeneralSecurityException e) {
 				e.printStackTrace();

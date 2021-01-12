@@ -15,6 +15,7 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.Events;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -55,6 +56,14 @@ public class EventManager {
 		service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
 				.setApplicationName(APPLICATION_NAME)
 				.build();
+	}
+
+	public List<Event> getAllEvents() throws IOException {
+		Events events = service
+				.events()
+				.list("3celm3jfnf8v441ar1uutr37g0@group.calendar.google.com")
+				.execute();
+		return events.getItems();
 	}
 
 	public Event addEvent(int description) throws IOException, GeneralSecurityException {

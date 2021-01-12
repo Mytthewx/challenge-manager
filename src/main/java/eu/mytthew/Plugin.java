@@ -1,10 +1,12 @@
 package eu.mytthew;
 
-import org.json.JSONObject;
+import com.google.api.services.calendar.model.Event;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -12,28 +14,22 @@ public class Plugin {
 	private final EventManager eventManager = new EventManager();
 
 	public Plugin() throws GeneralSecurityException, IOException {
-		FileOperation fileOperation = new FileOperation();
 		ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
 
 		exec.schedule(() -> {
 			try {
-				int description = 1;
-				String todayDate = LocalDate.now().toString();
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("description", description);
-				if (fileOperation.fileExist("last")) {
-					jsonObject = fileOperation.openFile("last");
-					if (!jsonObject.getString("date").equals(todayDate)) {
-						description = jsonObject.getInt("description");
-						fileOperation.deleteFile("last");
-						eventManager.addEvent(description + 1);
-						jsonObject.put("date", todayDate);
-						fileOperation.createFile("last", jsonObject);
-					}
+				LocalDate yesterdayDate = LocalDate.now().minusDays(1);
+				List<Event> eventList = eventManager.getAllEvents();
+				Optional<Event> yesterdayEvent = eventList
+						.stream()
+						.filter(event -> event.getStart().getDate().toString().equals(yesterdayDate.toString()))
+						.findFirst();
+				if (yesterdayEvent.isPresent()) {
+					String description = yesterdayEvent.get().getDescription();
+					int descriptionNumber = Integer.parseInt(description.split("/")[0]);
+					eventManager.addEvent(descriptionNumber + 1);
 				} else {
-					eventManager.addEvent(description);
-					jsonObject.put("date", todayDate);
-					fileOperation.createFile("last", jsonObject);
+					eventManager.addEvent(1);
 				}
 			} catch (IOException | GeneralSecurityException e) {
 				e.printStackTrace();

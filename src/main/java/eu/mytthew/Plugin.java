@@ -6,12 +6,13 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class Plugin {
+	private final EventManager eventManager = new EventManager();
+
 	public static void main(String[] args) {
 
 	}
 
-	public Plugin() {
-		EventManager eventManager = new EventManager();
+	public Plugin() throws GeneralSecurityException, IOException {
 		ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
 		exec.schedule(() -> {
 			try {

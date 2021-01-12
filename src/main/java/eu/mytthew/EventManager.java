@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class EventManager {
+	private final Calendar service;
 	private static final String APPLICATION_NAME = "EventManager";
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 	private static final String TOKENS_DIRECTORY_PATH = "tokens";
@@ -49,16 +50,19 @@ public class EventManager {
 		return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
 	}
 
-	public void addEvent() throws IOException, GeneralSecurityException {
+	public EventManager() throws GeneralSecurityException, IOException {
 		NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-		Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+		service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
 				.setApplicationName(APPLICATION_NAME)
 				.build();
+	}
+	
 
+	public void addEvent() throws IOException, GeneralSecurityException {
 		Event event = new Event()
 				.setSummary("100 days of coding challenge")
 				.setColorId("4")
-				.setDescription("Next day - test");
+				.setDescription("testing description");
 		DateTime today = new DateTime(String.valueOf(LocalDate.now()));
 		EventDateTime eventDateTime = new EventDateTime()
 				.setDate(today);
